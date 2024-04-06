@@ -17,7 +17,6 @@ public class House extends Building {
    *                      class Building()
    * @param residents     the arraylist of the residents
    * @param hasDiningRoom Boolean - does the house have a dining hall?
-   * @param hasElevator   Boolean - does the house have an elevator?
    */
   public House(String name, String address, int nFloors, ArrayList<String> residents, boolean hasDiningRoom,
       boolean hasElevator) {
@@ -74,18 +73,43 @@ public class House extends Building {
   }
 
   /**
+   * OVERLOADED - Moves multiple residents into a House()
+   * 
+   * @param name the ArrayList<String> of residents to be moved in.
+   */
+  public void moveIn(ArrayList<String> names) {
+    this.residents.addAll(names);
+  }
+
+  /**
    * Moves a new resident out of a House(). Checks if the person lives in the
    * house before executing.
    * 
    * @param name the name of the resident to be moved out.
    */
   public String moveOut(String name) {
-    if (this.residents.contains(name)) {
+    if (this.isResident(name)) {
       this.residents.remove(name);
       return name + " has moved out.";
     } else {
-      return name + " could not move out because they do not live in " + this.name;
+      return name + " could not move out because they do not live in " + this.name + ".";
     }
+
+  }
+
+  /**
+   * OVERLOADED - Moves multiple residents out of a House(). Checks if the people
+   * live in the
+   * house before executing.
+   * 
+   * @param name the name of the resident to be moved out.
+   */
+  public String moveOut(ArrayList<String> names) {
+    String results = "The following students have been asked to move out: \n";
+    for (String name : names) {
+      results = results + name + ": " + moveOut(name) + "\n";
+    }
+    return results;
 
   }
 
@@ -99,20 +123,18 @@ public class House extends Building {
     return this.residents.contains(person);
   }
 
-  // ------------------------ END A6 CODE ------------------------
+  /**
+   * Prints all class methods for the user.
+   */
   public void showOptions() {
-    // NOT using super.showOptions() here because sometimes I want to remove the goToFloor() text
+    // NOT using super.showOptions() here because sometimes I want to remove the
+    // goToFloor() text
     System.out.println("Available options at " + this.name + ":\n + enter() \n + exit() \n + goUp() \n + goDown()");
-    if (this.hasElevator) { System.out.println("+ goToFloor(n)");}
-    System.out.println(" + hasDiningRoom() \n + nResidents()\n + moveIn(name)\n + moveOut(name)\n + isResident(person)");
-}
-public void goToFloor(int floorNum) {
-  if (!this.hasElevator) {
-      throw new RuntimeException("This building does not have an elevator. Please take the stairs by using the `goUp()` or `goDown()` methods");
+    if (this.hasElevator) {
+      System.out.println("+ goToFloor()");
+    }
+    System.out.println(" + hasDiningRoom() \n + nResidents()\n + moveIn()\n + moveOut()\n + isResident()");
   }
-  super.goToFloor(floorNum);
-}
-
 
   public static void main(String[] args) {
     // Make some residents
@@ -131,6 +153,10 @@ public void goToFloor(int floorNum) {
     // scenario
     System.out.println(gillett.moveOut("Nina Wattenberg"));
 
+    // Try moving out all of gillett house
+    // System.out.println(gillett.moveOut(gillettResidents));
+    System.out.println(gillett.moveOut(new ArrayList<String>(Arrays.asList("Nina Wattenberg", "Elm Markert",
+        "Tillie Slosser", "Taylor Agena", "testy test test"))));
   }
 
 }

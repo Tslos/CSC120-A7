@@ -2,27 +2,49 @@
 public class Cafe extends Building {
 
     private int nCoffeeOunces;
-    private int maxCoffeeOunces; 
+    private int maxCoffeeOunces;
     private int nSugarPackets;
-    private int maxSugarPackets; 
-    private int nCreams; 
-    private int maxCreams; 
-    private int nCups; 
-    private int maxCups; 
+    private int maxSugarPackets;
+    private int nCreams;
+    private int maxCreams;
+    private int nCups;
+    private int maxCups;
+
+    /* Default constructor */
+    public Cafe() {
+        this("<Name Unknown>", "<Address Unknown>", 1, 1000, 1000, 1000, 100);
+    }
+
+    /* Overloaded constructor with address only */
+    public Cafe(String address) {
+        this(); // Call default constructor
+        this.address = address; // Override address
+    }
+
+    /* Overloaded constructor with name, address */
+    public Cafe(String name, String address) {
+        this();
+        this.name = name;
+        this.address = address;
+    }
 
     /**
-     * Constructor for a Café
+     * Full constructor for a Café
      * 
      * @param name          The name of the café - passed to the super class
      *                      Building()
      * @param address       The address of the café - passed to the super class
      *                      Building()
      * @param nFloors       The number of floors in the café - passed to the super
-     *                      class Building()
-     * @param nCoffeeOunces The max/starting number of coffee ounces the café has in inventory
-     * @param nSugarPackets The max/starting number of sugar packets the café has in inventory
-     * @param nCreams       The max/starting number of creams the café has in inventory
-     * @param nCups         The max/starting number of cups the café has in inventory
+     *                      class Building(). Assumes number of floors is
+     * @param nCoffeeOunces The max/starting number of coffee ounces the café has in
+     *                      inventory
+     * @param nSugarPackets The max/starting number of sugar packets the café has in
+     *                      inventory
+     * @param nCreams       The max/starting number of creams the café has in
+     *                      inventory
+     * @param nCups         The max/starting number of cups the café has in
+     *                      inventory
      */
     public Cafe(String name, String address, int nFloors, int nCoffeeOunces, int nSugarPackets, int nCreams,
             int nCups) {
@@ -75,6 +97,11 @@ public class Cafe extends Building {
         }
     }
 
+    /* Quick coffee order with pre-filled values */
+    public void sellCoffee() {
+        this.sellCoffee(12, 0, 0);
+    }
+
     /**
      * Restocks the cafe. Called from within Cafe.sellCoffee() in the event that
      * there is not enough of any item in the inventory. This function will always
@@ -94,9 +121,34 @@ public class Cafe extends Building {
         System.out.println("\tPurchased:\n\tCoffees: " + nCoffeeOunces + "\n\tSugar Packets: " + nSugarPackets);
         System.out.println("\tCreams: " + nCreams + "\n\tCups: " + nCups + "\n");
     }
-    // ------------------------ END A6 CODE ------------------------
+
+    /**
+     * Prints all class methods for the user.
+     */
     public void showOptions() {
-        System.out.println("Available options at " + this.name + ":\n + enter() \n + exit() \n + goUp() \n + goDown()\n + restock(n,n,n,n) \n + sellCoffee(n,n,n)");
+        System.out.println(
+                "Available options at " + this.name + ":\n + enter() \n + exit() \n + restock() \n + sellCoffee()");
+    }
+
+    /**
+     * Overridden from Building() - Cafe's do not have customer-accessible
+     * second/third/etc floors
+     * 
+     * @param floorNum the floor the customer is attempting to go to
+     */
+    public void goToFloor(int floorNum) {
+        if (this.activeFloor == -1) {
+            throw new RuntimeException(
+                    "You are not inside this Building. Must call enter() before navigating between floors.");
+        }
+        if (floorNum < 1 || floorNum > this.nFloors) {
+            throw new RuntimeException(
+                    "Invalid floor number. Valid range for this Building is 1-" + this.nFloors + ".");
+        }
+        // If the user gets past the first two checks, tell them they are not allowed on
+        // other floors.
+        System.out.println("Any other floors of this building are employee-only areas. Please remain on floor "
+                + this.activeFloor);
     }
 
     public static void main(String[] args) {

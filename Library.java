@@ -1,5 +1,7 @@
 /* This is a stub for the Library class */
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.TreeMap;
@@ -20,15 +22,15 @@ public class Library extends Building {
    * @param address the address of the building, passed to the parent class
    * @param nFloors the number of floors the building has
    */
-  public Library(String name, String address, int nFloors) {
+  public Library(String name, String address, int nFloors, boolean hasElevator) {
     super(name, address, nFloors);
     this.collection = new Hashtable<>();
+    this.hasElevator = hasElevator;
     System.out.println("You have built a library: 📖");
   }
 
   /**
-   * Add a title to the library's collection. If the title already exists, this
-   * function prints a statement warning the user.
+   * Add a title to the library's collection.
    * 
    * @param title the book to add
    */
@@ -61,6 +63,17 @@ public class Library extends Building {
   }
 
   /**
+   * OVERLOADED - Add a COLLECTION of title to the library's collection.
+   * 
+   * @param titles the ArrayList<String> of books to add
+   */
+  public void addTitle(ArrayList<String> titles) {
+    for (String title : titles) {
+      this.addTitle(title);
+    }
+  }
+
+  /**
    * Removes a title from the collection (as opposed to checking it out)
    * 
    * @param title the title that is to be removed
@@ -77,6 +90,17 @@ public class Library extends Building {
     } catch (Exception e) {
       System.out.println(e);
       return (title);
+    }
+  }
+
+  /**
+   * OVERLOADED - Remove a COLLECTION of title from the library's collection.
+   * 
+   * @param titles the ArrayList<String> of books to remove
+   */
+  public void removeTitle(ArrayList<String> titles) {
+    for (String title : titles) {
+      this.removeTitle(title);
     }
   }
 
@@ -98,6 +122,17 @@ public class Library extends Building {
   }
 
   /**
+   * OVERLOADED - Check out a COLLECTION of titles from the library's collection.
+   * 
+   * @param titles the ArrayList<String> of books to check out
+   */
+  public void checkOut(ArrayList<String> titles) {
+    for (String title : titles) {
+      this.checkOut(title);
+    }
+  }
+
+  /**
    * Returns a book to the library (as opposed to adding a new copy)
    * 
    * @param title the title to be returned
@@ -111,6 +146,17 @@ public class Library extends Building {
       }
     } catch (Exception e) {
       System.out.println(e);
+    }
+  }
+
+  /**
+   * OVERLOADED - Return a COLLECTION of titles to the library's collection.
+   * 
+   * @param titles the ArrayList<String> of books to return
+   */
+  public void returnBook(ArrayList<String> titles) {
+    for (String title : titles) {
+      this.returnBook(title);
     }
   }
 
@@ -163,25 +209,21 @@ public class Library extends Building {
         });
   }
 
-  // ------------------------ END A6 CODE ------------------------
+  /**
+   * Prints all class methods for the user.
+   */
   public void showOptions() {
-    // NOT using super.showOptions() here because sometimes I want to remove the goToFloor() text
+    // NOT using super.showOptions() here because sometimes I want to remove the
+    // goToFloor() text
     System.out.println("Available options at " + this.name + ":\n + enter() \n + exit() \n + goUp() \n + goDown()");
-    if (this.hasElevator) { System.out.println("+ goToFloor(n)");}
-    System.out.println(" + addTitle(title) \n + removeTitle(title)\n + checkOut(title)\n + returnBook(title)");
-}
-
-public void goToFloor(int floorNum) {
-  if (!this.hasElevator) {
-      throw new RuntimeException("This building does not have an elevator. Please take the stairs by using the `goUp()` or `goDown()` methods");
+    if (this.hasElevator) {
+      System.out.println("+ goToFloor()");
+    }
+    System.out.println(" + addTitle() \n + removeTitle()\n + checkOut()\n + returnBook()");
   }
-  super.goToFloor(floorNum);
-}
-
-
 
   public static void main(String[] args) {
-    Library josten = new Library("Josten", "122 Green Street", 3);
+    Library josten = new Library("Josten", "122 Green Street", 3, false);
     josten.addTitle("Music Theory I by B. Toven");
     josten.addTitle("Music Theory I by B. Toven");
     josten.addTitle("Rock 'n Roll Classics by Elle Vess.");
@@ -193,6 +235,12 @@ public void goToFloor(int floorNum) {
     josten.returnBook("Music Theory I by B. Toven");
     josten.returnBook("Cats and The Ice Age");
     josten.printCollection();
+
+    // Test adding a collection of books all at once
+    josten.addTitle(new ArrayList<String>(Arrays.asList("Moo-sic: An Exploration of Bovine Communication",
+        "How To Spell CABBAGE, and Other Lessons in Sheet Music")));
+    josten.removeTitle(new ArrayList<String>(Arrays.asList("Moo-sic: An Exploration of Bovine Communication",
+        "How To Spell CABBAGE, and Other Lessons in Sheet Music")));
   }
 
 }
